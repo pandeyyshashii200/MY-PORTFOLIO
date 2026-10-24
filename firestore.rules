@@ -1,17 +1,21 @@
-rules_version = '2';
+ rules_version = '2';
 
 service cloud.firestore {
+  match /databases/{database}/documents {
 
-    match /databases/{database}/documents {
+    match /contactMessages/{messageId} {
+      allow create: if
+        request.resource.data.name is string &&
+        request.resource.data.email is string &&
+        request.resource.data.subject is string &&
+        request.resource.data.message is string &&
+        request.resource.data.createdAt is string &&
+        request.resource.data.name.size() > 0 &&
+        request.resource.data.email.size() > 0 &&
+        request.resource.data.subject.size() > 0 &&
+        request.resource.data.message.size() > 0;
 
-        match /messages/{messageId} {
-
-            allow create: if
-                request.resource.data.name is string
-                && request.resource.data.email is string
-                && request.resource.data.message is string;
-
-            allow read, update, delete: if false;
-        }
+      allow read, update, delete: if false;
     }
+  }
 }

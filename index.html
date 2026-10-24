@@ -338,7 +338,7 @@
                     </p>
                 </div>
 
-                <form class="contact-form" action="#" method="get">
+                <form class="contact-form" action="#" method="post">
                     <label for="name">Your Name</label>
                     <input type="text" id="name" name="name"
                            placeholder="Enter your name" required>
@@ -366,6 +366,34 @@
         <p>&copy; 2026 Shashi Pandey. All rights reserved.</p>
         <p>Designed and built with HTML and CSS.</p>
     </footer>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+   import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
+    const firebaseConfig = {
+  apiKey: "AIzaSyB4SOQMy3621ZbywWgQD2Ur_j2_eXWCKZM",
+  authDomain: "my-portfolio-717f3.firebaseapp.com",
+  projectId: "my-portfolio-717f3",
+  storageBucket: "my-portfolio-717f3.firebasestorage.app",
+  messagingSenderId: "340952856061",
+  appId: "1:340952856061:web:dd3be9585e12d5cf5f9594",
+  measurementId: "G-CP7DKNJ7PV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+window.saveContactMessage = async function (data) {
+        await addDoc(collection(db, "contactMessages"), {
+            name: data.name,
+            email: data.email,
+            subject: data.subject,
+            message: data.message,
+            createdAt: new Date().toISOString()
+        });
+    };
+    
+</script>
+
+<script src="script.js"></script>
 </body>
 </html>

@@ -78,38 +78,57 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Contact form validation
-    const contactForm = document.querySelector(".contact-form");
+    
 
-    if (contactForm) {
-        contactForm.addEventListener("submit", function (event) {
-            event.preventDefault();
+            const contactForm = document.querySelector(".contact-form");
 
-            const name = document.getElementById("name").value.trim();
-            const email = document.getElementById("email").value.trim();
-            const subject = document.getElementById("subject").value.trim();
-            const message = document.getElementById("message").value.trim();
+if (contactForm) {
+    contactForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
 
-            if (!name || !email || !subject || !message) {
-                alert("Please fill in all fields.");
-                return;
-            }
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const subject = document.getElementById("subject").value.trim();
+        const message = document.getElementById("message").value.trim();
 
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!name || !email || !subject || !message) {
+            alert("Please fill in all fields.");
+            return;
+        }
 
-            if (!emailPattern.test(email)) {
-                alert("Please enter a valid email address.");
-                return;
-            }
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            alert(
-                "Thank you, " + name +
-                "! Your form has been validated successfully. " +
-                "To send your message, the form needs a backend or form service."
-            );
+        if (!emailPattern.test(email)) {
+            alert("Please enter a valid email address.");
+            return;
+        }
+
+        const submitButton = contactForm.querySelector("button[type='submit']");
+        submitButton.disabled = true;
+        submitButton.textContent = "Sending...";
+
+        try {
+            await window.saveContactMessage({
+                name: name,
+                email: email,
+                subject: subject,
+                message: message
+            });
+
+            alert("Thank you, " + name + "! Your message has been sent successfully.");
 
             contactForm.reset();
+        } catch (error) {
+            console.error("Error saving contact message:", error?.message || error, error);
+            alert("Sorry, your message could not be sent. Please try again.");
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = "Send Message";
+        }
+    });
+}
         });
-    }
+    
 
     // Update the footer year automatically
     const footer = document.querySelector("footer");
@@ -123,4 +142,4 @@ document.addEventListener("DOMContentLoaded", function () {
                 " Shashi Pandey. All rights reserved.";
         }
     }
-});
+
